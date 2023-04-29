@@ -104,15 +104,7 @@ end, false)
 
 if (Config.CleanSQLeveryDay) then
     function clearSQL()
-        local ayer = os.date("*t")
-        ayer.day = ayer.day -1
-
-        local fecha_sql = os.date("%Y-%m-%d", os.time(ayer))
-
-        print(fecha_sql)
-        MySQL.query("DELETE FROM reportsystem WHERE DATE(fecha) = DATE(DATE_SUB(NOW(), INTERVAL 1 DAY))", function (result)
-            print(json.encode(result, {indent=true}))
-        end)
+        MySQL.query("DELETE FROM reportsystem WHERE DATE(fecha) = DATE(DATE_SUB(NOW(), INTERVAL 1 DAY))")
     end
 
     TriggerEvent("cron:runAt", 21, 0, clearSQL)
