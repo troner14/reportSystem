@@ -1,5 +1,5 @@
 # Como funciona:
-/getreports --> te abre un menu con todos los reportes que aya disponibles 
+/getreports --> te abre un menu con todos los reportes que aya disponibles \n
 /report --> para reportar sobre un bug o alg 
 
 # configuracion:
