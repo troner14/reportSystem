@@ -1,12 +1,11 @@
 local function getAllReports(callback)
-    MySQL.query("SELECT * FROM reportsystem", function(result)
+    MySQL.query("SELECT * FROM reportsystem WHERE fecha >= DATE_SUB(NOW(), INTERVAL 5 HOUR)", function(result)
         callback(result)
     end)
 end
 
 local function newReport(data, callback)
-    MySQL.query("INSERT INTO reportsystem (licence, name, descripcion, tipo) VALUES (?, ?, ?, ?)",
-        { data.licence, data.name, data.descripcion, data.tipo }, function(result)
+    MySQL.query("INSERT INTO reportsystem (licence, name, descripcion, tipo) VALUES (?, ?, ?, ?)",{ data.licence, data.name, data.descripcion, data.tipo }, function(result)
         callback(result)
     end)
 end
@@ -101,3 +100,20 @@ ESX.RegisterCommand("report", "user", function(xPlayer, args, showError)
     print(xPlayer.identifier)
     TriggerClientEvent("reportSys:client:openReportMenu", xPlayer.source, data)
 end, false)
+
+
+if (Config.CleanSQLeveryDay) then
+    function clearSQL()
+        local ayer = os.date("*t")
+        ayer.day = ayer.day -1
+
+        local fecha_sql = os.date("%Y-%m-%d", os.time(ayer))
+
+        print(fecha_sql)
+        MySQL.query("DELETE FROM reportsystem WHERE DATE(fecha) = DATE(DATE_SUB(NOW(), INTERVAL 1 DAY))", function (result)
+            print(json.encode(result, {indent=true}))
+        end)
+    end
+
+    TriggerEvent("cron:runAt", 21, 0, clearSQL)
+end
