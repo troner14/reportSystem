@@ -133,7 +133,6 @@ ESX.RegisterCommand("togglereports", "admin", function (xPlayer, args, rawComman
         id = "newReport_Notify",
         title = "Reporte",
         description = description,
-        type = 'error'
     })
 end)
 
