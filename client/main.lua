@@ -86,8 +86,8 @@ end
 
 function OpenAlertDialog(data)
     local alert = lib.alertDialog({
-        header = 'Nuevo Reporte',
-        content = 'Un nuevo reporte a sido creado del usuario'..data.name,
+        header = TranslateCap("alert.header"),
+        content = TranslateCap("alert.content", data.name),
         centered = false,
         size= 'xs',
         cancel = true

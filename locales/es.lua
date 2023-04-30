@@ -9,6 +9,8 @@ Locales['es'] = {
     ['menu.reporte.options.teleport'] = 'teletrasportarte al jugador',
     ['menu.reporte.options.Discordmsg'] = 'pedir que venga a disc',
     ['menu.reporte.options.closeMenu'] = 'cerrar menu',
+    ['alert.header'] = 'Nuevo Reporte',
+    ['aler.content'] = 'Un nuevo reporte a sido creado por el usuario %s',
 
     -- server locate
     ['ox_lib.notify.title'] = 'Reporte',
