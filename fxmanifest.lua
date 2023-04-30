@@ -4,7 +4,7 @@ game "gta5"
 author "Troner14"
 description "A simple report system with ox_lib."
 repository "https://github.com/iLLeniumStudios/illenium-appearance"
-version "v1.0"
+version "v1.1"
 lua54 "yes"
 
 client_scripts {
