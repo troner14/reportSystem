@@ -1,3 +1,5 @@
+AdminReportEnabled = {}
+
 local function getAllReports(callback)
     MySQL.query("SELECT * FROM reportsystem WHERE fecha >= DATE_SUB(NOW(), INTERVAL 5 HOUR)", function(result)
         callback(result)
@@ -16,9 +18,16 @@ RegisterServerEvent("reportSys:server:newReport", function(data)
         if (res.affectedRows) then
             TriggerClientEvent('ox_lib:notify', src, {
                 id = "newReport_Notify",
-                title = "Reporte",
-                description = "reporte enviado de manera existosa",
+                title = TranslateCap('ox_lib.notify.title'),
+                description = TranslateCap('ox_lib.notify.newReport.description'),
             })
+
+            local xAdmins = ESX.GetExtendedPlayers("group", "admin")
+            for _,xPlayer in pairs(xAdmins) do
+                if (AdminReportEnabled[xPlayer.identifier]) then
+                    TriggerClientEvent('reportSys:client:AlertAdmin', xPlayer.source, data)
+                end
+            end
         end
     end)
 end)
@@ -29,8 +38,8 @@ RegisterServerEvent("reportSys:server:closeReport", function(id)
         if (res.affectedRows) then
             TriggerClientEvent('ox_lib:notify', src, {
                 id = "newReport_Notify_del",
-                title = "Reporte",
-                description = "reporte eliminiado",
+                title = TranslateCap('ox_lib.notify.title'),
+                description = TranslateCap('ox_lib.notify.closeReport.description'),
             })
         end
     end)
@@ -44,21 +53,21 @@ RegisterServerEvent("reportSys:server:Teleport", function(identifier)
     if (xPlayer.identifier == xTarget.identifier) then
         xPlayer.triggerEvent("ox_lib:notify", {
             id = "newReport_Notify",
-            title = "Reporte",
-            description = "no puedes tepearte a ti mismo.",
+            title = TranslateCap('ox_lib.notify.title'),
+            description = TranslateCap('ox_lib.notify.teleport.notteleporttoyourself'),
             type = 'error'
         })
     else
         xPlayer.triggerEvent("ox_lib:notify", {
             id = "newReport_Notify",
-            title = "Reporte",
-            description = "te teletrasportaste a "..xTarget.name,
+            title = TranslateCap('ox_lib.notify.title'),
+            description = TranslateCap('ox_lib.notify.teleport.xplayermessage', xTarget.name),
         })
         xPlayer.setCoords(xTarget.getCoords())
         xTarget.triggerEvent("ox_lib:notify", {
             id = "newReport_Notify",
-            title = "Reporte",
-            description = GetPlayerName(xPlayer.source).."se teletrasporto a ti para atender el ticket.",
+            title = TranslateCap('ox_lib.notify.title'),
+            description = TranslateCap('ox_lib.notify.teleport.tplayermessage', GetPlayerName(xPlayer.source)),
         })
     end
 end)
@@ -67,16 +76,16 @@ RegisterServerEvent("reportSys:server:DiscSend", function(identifier)
     local src = source
     local xPlayer = ESX.GetPlayerFromId(src)
     local xTarget = ESX.GetPlayerFromIdentifier(identifier)
-
+    
     xTarget.triggerEvent("ox_lib:notify", {
         id = "newReport_Notify",
-        title = "Reporte",
-        description = "el administrador "..GetPlayerName(xPlayer.source).." te pide en sala de soporte de discord para atender tu reporte.",
+        title = TranslateCap('ox_lib.notify.title'),
+        description = TranslateCap("ox_lib.notify.DiscSend.description", GetPlayerName(xPlayer.source)),
     })
 end)
 
 
-ESX.RegisterCommand("getReports", "admin", function(xPlayer, args, showError)
+ESX.RegisterCommand("getreports", "admin", function(xPlayer, args, showError)
     getAllReports(function(res)
         if (#res == 0) then
             xPlayer.triggerEvent("ox_lib:notify", {
@@ -97,15 +106,54 @@ ESX.RegisterCommand("report", "user", function(xPlayer, args, showError)
         licence = xPlayer.identifier,
         name = xPlayer.name
     }
-    print(xPlayer.identifier)
     TriggerClientEvent("reportSys:client:openReportMenu", xPlayer.source, data)
 end, false)
 
+ESX.RegisterCommand("togglereports", "admin", function (xPlayer, args, rawCommand)
+    if (AdminReportEnabled[xPlayer.identifier]) then
+        AdminReportEnabled[xPlayer.identifier] = not AdminReportEnabled[xPlayer.identifier]
+    else
+        local meta = xPlayer.getMeta()
+        if (not meta.reportes) then
+            xPlayer.setMeta("reportes", {enabled = false})
+        end
+        local reportEnabled = xPlayer.getMeta("reportes", "enabled")
+        AdminReportEnabled[xPlayer.identifier] = reportEnabled
+    end
+
+    local description
+    if (AdminReportEnabled[xPlayer.identifier]) then
+        description = TranslateCap('command.togglereport.description.true')
+    else
+        description = TranslateCap('command.togglereport.description.false')
+    end
+
+
+    xPlayer.triggerEvent("ox_lib:notify", {
+        id = "newReport_Notify",
+        title = "Reporte",
+        description = description,
+        type = 'error'
+    })
+end)
+
+AddEventHandler("esx:playerLoaded", function(player, xPlayer)
+    if (xPlayer.group == "admin") then
+        local meta = xPlayer.getMeta()
+        if (not meta.reportes) then
+            xPlayer.setMeta("reportes", {enabled = false})
+        end
+        local reportEnabled = xPlayer.getMeta("reportes", "enabled")
+        AdminReportEnabled[xPlayer.identifier] = reportEnabled
+    end
+end)
+
 
 if (Config.CleanSQLeveryDay) then
-    function clearSQL()
+    function ClearSQL()
         MySQL.query("DELETE FROM reportsystem WHERE DATE(fecha) = DATE(DATE_SUB(NOW(), INTERVAL 1 DAY))")
     end
 
+    -- lib.cron.new('0 21 * * *', learSQL)
     TriggerEvent("cron:runAt", 21, 0, clearSQL)
 end

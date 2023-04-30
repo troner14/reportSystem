@@ -11,6 +11,8 @@ Config.typeofreports = {
     { value="bug", label="bug"},
     { value="antirol", label="antirol"},
 }
+-- if this is true when new report is create all admin with reports enabled recibed a notify with the new report
+Config.notifyAdmins = true
 
 --need cron script
 Config.CleanSQLeveryDay = true --false if you don't have cron script

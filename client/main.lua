@@ -1,3 +1,42 @@
+function openReportMenu(report)
+    local Options = {
+        {label=TranslateCap("menu.reporte.options.closeReport"), description=report.descripcion},
+    }
+
+    if (Config.reportOptions.teleport) then
+        Options[#Options+1] = {
+            label=TranslateCap("menu.reporte.options.teleport"),
+            description=report.descripcion
+        }
+    end
+    if (Config.reportOptions.discord) then
+        Options[#Options+1] = {
+            label=TranslateCap("menu.reporte.options.Discordmsg"),
+            description=report.descripcion
+        }
+    end
+
+    Options[#Options+1] = {label=TranslateCap("menu.reporte.options.closeMenu")}
+    lib.registerMenu({
+        id = 'menu_reportes_'..report.name,
+        title = TranslateCap("menu.reporte.title", report.name),
+        position =Config.menuPosition,
+        options = Options
+    }, function (selected, _)
+        if (selected == 4) then return end;
+
+        if (selected == 1) then
+            TriggerServerEvent("reportSys:server:closeReport",report.id)
+        elseif (selected == 2 and Config.reportOptions.teleport) then
+            TriggerServerEvent("reportSys:server:Teleport", report.licence)
+        elseif (selected == 3 and Config.reportOptions.teleport) then
+            TriggerServerEvent("reportSys:server:DiscSend", report.licence)
+        end
+    end)
+
+    lib.showMenu('menu_reportes_'..report.name)
+end
+
 function OpenMenu(reports)
     local options = {}
     for _,report in pairs(reports) do
@@ -14,42 +53,7 @@ function OpenMenu(reports)
         position = Config.menuPosition,
         options = options
     }, function (_, __, args, ___)
-        local Options = {
-            {label=TranslateCap("menu.reporte.options.closeReport"), description=args.data.descripcion},
-        }
-
-        if (Config.reportOptions.teleport) then
-            Options[#Options+1] = {
-                label=TranslateCap("menu.reporte.options.teleport"),
-                description=args.data.descripcion
-            }
-        end
-        if (Config.reportOptions.discord) then
-            Options[#Options+1] = {
-                label=TranslateCap("menu.reporte.options.Discordmsg"),
-                description=args.data.descripcion
-            }
-        end
-
-        Options[#Options+1] = {label=TranslateCap("menu.reporte.options.closeMenu")}
-        lib.registerMenu({
-            id = 'menu_reportes_'..args.data.name,
-            title = TranslateCap("menu.reporte.title", args.data.name),
-            position =Config.menuPosition,
-            options = Options
-        }, function (selected, _)
-            if (selected == 4) then return end;
-
-            if (selected == 1) then
-                TriggerServerEvent("reportSys:server:closeReport",args.data.id)
-            elseif (selected == 2 and Config.reportOptions.teleport) then
-                TriggerServerEvent("reportSys:server:Teleport", args.data.licence)
-            elseif (selected == 3 and Config.reportOptions.teleport) then
-                TriggerServerEvent("reportSys:server:DiscSend", args.data.licence)
-            end
-        end)
-
-        lib.showMenu('menu_reportes_'..args.data.name)
+        openReportMenu(args.data)
     end)
 
     lib.showMenu("menu_reportes")
@@ -80,5 +84,20 @@ function OpenContext(data)
     end
 end
 
+function OpenAlertDialog(data)
+    local alert = lib.alertDialog({
+        header = 'Nuevo Reporte',
+        content = 'Un nuevo reporte a sido creado del usuario'..data.name,
+        centered = false,
+        size= 'xs',
+        cancel = true
+    })
+
+    if (alert == "confirm") then
+        openReportMenu(data)
+    end
+end
+
 RegisterNetEvent("reportSys:client:openReportsMenu", OpenMenu)
 RegisterNetEvent("reportSys:client:openReportMenu", OpenContext)
+RegisterNetEvent("reportSys:client:AlertAdmin", OpenAlertDialog)
