@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS `reportsystem` (
   `descripcion` longtext DEFAULT NULL,
   `tipo` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
 -- La exportación de datos fue deseleccionada.
 

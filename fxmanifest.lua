@@ -3,8 +3,7 @@ game "gta5"
 
 author "Troner14"
 description "A simple report system with ox_lib."
-repository "https://github.com/iLLeniumStudios/illenium-appearance"
-version "v1.1"
+version "v1.4"
 lua54 "yes"
 
 client_scripts {
@@ -19,13 +18,15 @@ server_scripts {
 shared_scripts {
   "config.lua",
   "@ox_lib/init.lua",
-  "@es_extended/imports.lua",
-  '@es_extended/locale.lua',
+  'shared/locales.lua',
   "locales/*.lua",
+}
+
+files {
+  "shared/**/*.lua"
 }
 
 dependency {
   "oxmysql",
   "ox_lib",
-  "es_extended"
 }

@@ -22,4 +22,5 @@ Locales['en'] = {
     ['ox_lib.notify.DiscSend.description'] = 'the administrator %s It asks you in the discord support room to attend to your report.',
     ['command.togglereport.description.true'] = 'You just turned on report notifications',
     ['command.togglereport.description.false'] = 'You just turned off report notifications',
+    ['command.getReports.notify.notReports'] = 'no reports to show'
 }

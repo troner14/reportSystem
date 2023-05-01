@@ -22,5 +22,5 @@ Locales['es'] = {
     ['ox_lib.notify.DiscSend.description'] = 'el  administrador %s te pide en sala de soporte de discord para atender tu reporte.',
     ['command.togglereport.description.true'] = 'Usted acava de activar las notificaciones de reportes',
     ['command.togglereport.description.false'] = 'Usted acava de desactivar las notificaciones de reportes',
-
+    ['command.getReports.notify.notReports'] = 'no hay reportes que mostrar'
 }

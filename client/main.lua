@@ -55,7 +55,6 @@ function OpenMenu(reports)
     }, function (_, __, args, ___)
         openReportMenu(args.data)
     end)
-
     lib.showMenu("menu_reportes")
 end
 

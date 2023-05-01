@@ -22,7 +22,7 @@ RegisterServerEvent("reportSys:server:newReport", function(data)
                 description = TranslateCap('ox_lib.notify.newReport.description'),
             })
 
-            local xAdmins = ESX.GetExtendedPlayers("group", "admin")
+            local xAdmins = Config.GetAllAdmins()
             for _,xPlayer in pairs(xAdmins) do
                 if (AdminReportEnabled[xPlayer.identifier]) then
                     TriggerClientEvent('reportSys:client:AlertAdmin', xPlayer.source, data)
@@ -47,8 +47,8 @@ end)
 
 RegisterServerEvent("reportSys:server:Teleport", function(identifier)
     local src = source
-    local xPlayer = ESX.GetPlayerFromId(src)
-    local xTarget = ESX.GetPlayerFromIdentifier(identifier)
+    local xPlayer = Config.GetPlayerFromId(src)
+    local xTarget = Config.GetPlayerFromIdentifier(identifier)
 
     if (xPlayer.identifier == xTarget.identifier) then
         xPlayer.triggerEvent("ox_lib:notify", {
@@ -74,9 +74,9 @@ end)
 
 RegisterServerEvent("reportSys:server:DiscSend", function(identifier)
     local src = source
-    local xPlayer = ESX.GetPlayerFromId(src)
-    local xTarget = ESX.GetPlayerFromIdentifier(identifier)
-    
+    local xPlayer = Config.GetPlayerFromId(src)
+    local xTarget = Config.GetPlayerFromIdentifier(identifier)
+
     xTarget.triggerEvent("ox_lib:notify", {
         id = "newReport_Notify",
         title = TranslateCap('ox_lib.notify.title'),
@@ -85,13 +85,13 @@ RegisterServerEvent("reportSys:server:DiscSend", function(identifier)
 end)
 
 
-ESX.RegisterCommand("getreports", "admin", function(xPlayer, args, showError)
+Config.RegisterCommand("getReports", Config.RoleToGetReports, function(xPlayer, args)
     getAllReports(function(res)
         if (#res == 0) then
             xPlayer.triggerEvent("ox_lib:notify", {
                 id = "newReport_Notify",
-                title = "Reporte",
-                description = "no hay reportes que mostrar",
+                title = TranslateCap('ox_lib.notify.title'),
+                description = TranslateCap('command.getReports.notify.notReports'),
                 type = 'error'
             })
             return;
@@ -101,7 +101,7 @@ ESX.RegisterCommand("getreports", "admin", function(xPlayer, args, showError)
     end);
 end, false)
 
-ESX.RegisterCommand("report", "user", function(xPlayer, args, showError)
+Config.RegisterCommand("report", "user", function(xPlayer, args)
     local data = {
         licence = xPlayer.identifier,
         name = xPlayer.name
@@ -109,7 +109,11 @@ ESX.RegisterCommand("report", "user", function(xPlayer, args, showError)
     TriggerClientEvent("reportSys:client:openReportMenu", xPlayer.source, data)
 end, false)
 
-ESX.RegisterCommand("togglereports", "admin", function (xPlayer, args, rawCommand)
+-- Config.RegisterCommand("testgetadmins", Config.RoleToGetReports, function (xPlayer, args)
+--     print(Config.GetAllAdmins())
+-- end)
+
+Config.RegisterCommand("togglereports", Config.RoleToGetReports, function (xPlayer, args)
     if (AdminReportEnabled[xPlayer.identifier]) then
         AdminReportEnabled[xPlayer.identifier] = not AdminReportEnabled[xPlayer.identifier]
     else
@@ -131,28 +135,32 @@ ESX.RegisterCommand("togglereports", "admin", function (xPlayer, args, rawComman
 
     xPlayer.triggerEvent("ox_lib:notify", {
         id = "newReport_Notify",
-        title = "Reporte",
+        title = TranslateCap('ox_lib.notify.title'),
         description = description,
     })
 end)
 
-AddEventHandler("esx:playerLoaded", function(player, xPlayer)
-    if (xPlayer.group == "admin") then
-        local meta = xPlayer.getMeta()
-        if (not meta.reportes) then
-            xPlayer.setMeta("reportes", {enabled = false})
+if (Config.framework == "ESX") then
+    AddEventHandler("esx:playerLoaded", function(player, xPlayer)
+        if (xPlayer.group == Config.RoleToGetReports) then
+            local meta = xPlayer.getMeta()
+            if (not meta.reportes) then
+                xPlayer.setMeta("reportes", {enabled = false})
+            end
+            local reportEnabled = xPlayer.getMeta("reportes", "enabled")
+            AdminReportEnabled[xPlayer.identifier] = reportEnabled
         end
-        local reportEnabled = xPlayer.getMeta("reportes", "enabled")
-        AdminReportEnabled[xPlayer.identifier] = reportEnabled
-    end
-end)
+    end)
+end
 
 
 if (Config.CleanSQLeveryDay) then
     function ClearSQL()
         MySQL.query("DELETE FROM reportsystem WHERE DATE(fecha) = DATE(DATE_SUB(NOW(), INTERVAL 1 DAY))")
     end
-
-    -- lib.cron.new('0 21 * * *', learSQL)
-    TriggerEvent("cron:runAt", 21, 0, clearSQL)
+    if (Config.framework == "ESX") then
+        TriggerEvent("cron:runAt", 21, 0, ClearSQL)
+    else
+        exports["qb-smallresources"]:CreateTimedJob(21, 0, ClearSQL)
+    end
 end
