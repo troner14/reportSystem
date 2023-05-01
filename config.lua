@@ -3,7 +3,6 @@
 ---@field typeofreports { value : string, label: string}[]
 ---@field CleanSQLeveryDay boolean
 Config = {}
-Config.EsVersion = "legacy"
 
 ---@type "es" | "en"
 Config.Locale = "en"
