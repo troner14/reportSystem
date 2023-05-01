@@ -16,7 +16,10 @@ Config.typeofreports = {
 -- if this is true when new report is create all admin with reports enabled recibed a notify with the new report
 Config.notifyAdmins = true
 
-Config.RoleToGetReports="admin"
+Config.RoleToGetReports={
+    "admin",
+    "owner"
+}
 
 --need cron script or in qb-core using qb-smallresources
 Config.CleanSQLeveryDay = true --false if you don't have cron /qb-smallresources script
