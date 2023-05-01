@@ -10,7 +10,7 @@ Locales['en'] = {
     ['menu.reporte.options.Discordmsg'] = 'send notify to go discord',
     ['menu.reporte.options.closeMenu'] = 'Close menu',
     ['alert.header'] = 'New Report',
-    ['aler.content'] = 'A new Report has been create from user %s',
+    ['alert.content'] = 'A new Report has been create from user %s',
 
     -- server locate
     ['ox_lib.notify.title'] = 'Report',
