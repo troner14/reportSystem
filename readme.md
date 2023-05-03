@@ -31,8 +31,8 @@ Config.reportOptions = {
 }
 ```
 
-#Features
-[:check:] multiframework support
-[] multimenu support
-[] screenshot of entity report.
+# Features
+[:check:] multiframework support \
+[] multimenu support \
+[] screenshot of entity report. \
 
