@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS `reportsystem` (
   `name` varchar(50) DEFAULT NULL,
   `descripcion` longtext DEFAULT NULL,
   `tipo` varchar(50) DEFAULT NULL,
+  `fecha` DATETIME NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
