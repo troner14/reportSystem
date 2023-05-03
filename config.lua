@@ -15,10 +15,12 @@ Config.typeofreports = {
 -- if this is true when new report is create all admin with reports enabled recibed a notify with the new report
 Config.notifyAdmins = true
 
-Config.RoleToGetReports={
-    "admin",
-    "owner"
-}
+-- the lowest group to acces to commands of reports an notify
+-- for example if you have god, admin, mod.
+-- if you put mod. admins and god they will also have permission
+-- in ESX legacy can use array to especcific a groups if  you want but work equals.
+Config.RoleToGetReports="admin"
+
 
 --need cron script or in qb-core using qb-smallresources
 Config.CleanSQLeveryDay = true --false if you don't have cron /qb-smallresources script
