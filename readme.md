@@ -13,7 +13,7 @@
 # configuracion:
 puedes configurar que tipos de reportes pueden haber en el config.lua 
 
-```
+```lua
 Config = {}
 Config.Locale = GetConvar('esx:locale', 'es')
 Config.menuPosition = "bottom-right"
@@ -30,3 +30,9 @@ Config.reportOptions = {
     discord = true,
 }
 ```
+
+#Features
+[:check:] multiframework support
+[] multimenu support
+[] screenshot of entity report.
+
