@@ -66,11 +66,11 @@ Config.GetPlayerFromId = function(source)
 end
 
 Config.GetPlayerFromIdentifier  = function(identifier)
-    local src = QBCore.Functions.GetSource(identifier)
-    local xplayer = QBCore.Functions.GetPlayer(src)
+    local xplayer = QBCore.Functions.GetPlayerByCitizenId(identifier)
 
     return xplayerModification(xplayer)
 end
+
 
 Config.RegisterCommand = function(name, group, cb, CanConsole, help, arguments, argsrequired)
     QBCore.Commands.Add(name, nil, nil, nil, function(source, args)
