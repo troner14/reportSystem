@@ -24,7 +24,7 @@ local function xplayerModification (xplayer)
         TriggerClientEvent('QBCore:Command:TeleportToPlayer', xplayer.source, coords)
     end
     xplayer.getCoords = function()
-        return GetEntityCoords(xplayer.source, false)
+        return QBCore.Functions.GetCoords(GetPlayerPed(xplayer.source))
     end
     xplayer.setMeta = xplayer.Functions.SetMetaData
     xplayer.getMeta = function(index, subIndex)
