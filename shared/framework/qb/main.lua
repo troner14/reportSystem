@@ -20,6 +20,9 @@ local function xplayerModification (xplayer)
     xplayer.triggerEvent = function (EventName, ...)
         TriggerClientEvent(EventName, xplayer.PlayerData.source, ...)
     end
+    xplayer.setcoords = function (coords)
+        TriggerClientEvent('QBCore:Command:TeleportToPlayer', xplayer.source, coords)
+    end
     xplayer.setMeta = xplayer.Functions.SetMetaData
     xplayer.getMeta = function(index, subIndex)
         if index then
