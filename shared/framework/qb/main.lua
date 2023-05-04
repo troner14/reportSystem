@@ -20,7 +20,7 @@ local function xplayerModification (xplayer)
     xplayer.triggerEvent = function (EventName, ...)
         TriggerClientEvent(EventName, xplayer.PlayerData.source, ...)
     end
-    xplayer.setcoords = function (coords)
+    xplayer.setCoords = function (coords)
         TriggerClientEvent('QBCore:Command:TeleportToPlayer', xplayer.source, coords)
     end
     xplayer.getcoords = function()
