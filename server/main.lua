@@ -161,6 +161,10 @@ if (Config.CleanSQLeveryDay) then
     if (Config.framework == "ESX") then
         TriggerEvent("cron:runAt", 21, 0, ClearSQL)
     else
-        exports["qb-smallresources"]:CreateTimedJob(21, 0, ClearSQL)
+        if (exports["qb-smallresources"].CreateTimedJob) then
+            exports["qb-smallresources"]:CreateTimedJob(21, 0, ClearSQL)
+        else
+            print("export of cron in qb-smallresources dosn't exist \n verify if you have latest version of qb-smallresources")
+        end
     end
 end

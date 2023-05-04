@@ -31,9 +31,20 @@ Config.reportOptions = {
 }
 
 function loadModule(file)
-    local mod = LoadResourceFile(GetCurrentResourceName(), file)
+    local resourceName = GetCurrentResourceName()
+    local mod = LoadResourceFile(resourceName, file)
+
+    if not mod then
+        print("Error: No se pudo cargar el archivo " .. file)
+        return
+    end
+
     local modload, e = load(mod)
-    if (e) then return print(e) end
+    if not modload then
+        print("Error: " .. e)
+        return
+    end
+
     modload()
 end
 
