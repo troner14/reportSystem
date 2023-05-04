@@ -35,10 +35,11 @@ local function xplayerModification (xplayer)
                     local _type = type(subIndex)
 
                     if _type == "string" then
-                        if xplayer.PlayerData.metadata[index][subIndex] then
+                        if type(xplayer.PlayerData.metadata[index][subIndex]) ~= "nil" then
                             return xplayer.PlayerData.metadata[index][subIndex]
+                        else
+                            return
                         end
-                        return
                     end
 
                     if _type == "table" then

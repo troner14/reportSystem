@@ -114,7 +114,7 @@ end, false)
 -- end)
 
 Config.RegisterCommand("togglereports", Config.RoleToGetReports, function (xPlayer, args)
-    if (AdminReportEnabled[xPlayer.identifier]) then
+    if (type(AdminReportEnabled[xPlayer.identifier]) ~= "nil") then
         AdminReportEnabled[xPlayer.identifier] = not AdminReportEnabled[xPlayer.identifier]
     else
         local meta = xPlayer.getMeta()
