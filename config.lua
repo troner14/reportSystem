@@ -4,7 +4,7 @@
 ---@field CleanSQLeveryDay boolean
 Config = {}
 
----@type "es" | "en"
+---@type "es" | "en" | "de"
 Config.Locale = "en"
 
 Config.menuPosition = "bottom-right"
