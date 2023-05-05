@@ -121,7 +121,7 @@ Config.RegisterCommand("togglereports", Config.RoleToGetReports, function (xPlay
         if (not meta.reportes) then
             xPlayer.setMeta("reportes", {enabled = false})
         end
-        local reportEnabled = xPlayer.getMeta("reportes", "enabled")
+        local reportEnabled = xPlayer.getMeta("reportes").enabled
         AdminReportEnabled[xPlayer.identifier] = reportEnabled
     end
 
